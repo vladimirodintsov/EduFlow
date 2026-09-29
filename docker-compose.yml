@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: eduflow-postgres
+    environment:
+      POSTGRES_DB: eduflow
+      POSTGRES_USER: eduflow
+      POSTGRES_PASSWORD: changeme
+    ports:
+      - "5432:5432"
+    volumes:
+      - eduflow_pgdata:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: src/EduFlow.Api/Dockerfile
+    container_name: eduflow-api
+    depends_on:
+      - postgres
+    environment:
+      ConnectionStrings__Default: "Host=postgres;Port=5432;Database=eduflow;Username=eduflow;Password=changeme"
+    ports:
+      - "5000:8080"
+
+  telegram-bot:
+    build:
+      context: ./telegram-bot
+    container_name: eduflow-telegram-bot
+    depends_on:
+      - api
+    environment:
+      BOT_TOKEN: "${TELEGRAM_BOT_TOKEN}"
+      API_BASE_URL: "http://api:8080/api"
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: eduflow-frontend
+    depends_on:
+      - api
+    ports:
+      - "5173:5173"
+
+volumes:
+  eduflow_pgdata:

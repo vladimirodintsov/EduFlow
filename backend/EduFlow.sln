@@ -1,0 +1,4 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# EduFlow backend solution
+# Projects: EduFlow.Api, EduFlow.Application, EduFlow.Domain, EduFlow.Infrastructure, EduFlow.TelegramBot, EduFlow.UnitTests
+# Regenerate real GUIDs with: dotnet sln EduFlow.sln add src/**/*.csproj tests/**/*.csproj
